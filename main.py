@@ -97,7 +97,26 @@ def download_playlist(playlist_url, log_file, download_dir):
         print(f"Error downloading playlist: {e}")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+def download_video(video_url, download_dir):
+    """Downloads a single video."""
 
+    ydl_opts = {
+        'outtmpl': os.path.join(download_dir, '%(title)s.%(ext)s'),
+        'format': 'bestvideo[height<=720]+bestaudio/best[height<=720]',
+        'merge_output_format': 'mp4',
+        'nocheckcertificate': True,
+        'no_warnings': True,
+        'quiet': True,
+    }
+
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            video_info = ydl.extract_info(video_url, download=True)
+            print(f"Downloaded video: {video_info['title']}")
+    except yt_dlp.utils.DownloadError as e:
+        print(f"Error downloading video: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 
 if __name__ == "__main__":
